@@ -1,25 +1,83 @@
-import logo from './logo.svg';
-import './App.css';
+import "./index";
+import { useEffect,  useState } from "react";
 
-function App() {
+
+export default function App() {
+
+  const [data, setData] = useState([]);
+  const [newData, setnewData] = useState([]);
+
+  const fetchData = async () => {
+    const data = await fetch("https://jsonplaceholder.typicode.com/posts");
+    const post = await data.json();
+    setData(post);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+
+  const handleChange = (ind) => {
+    const value = data.filter((ele, index) => {
+      return index === ind;
+    });
+    setnewData([...newData, value[0]]);
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="first">
+        {data.map((ele, ind) => {
+          return (
+            <div
+              key={ind}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "5px",
+                width: "100%"
+              }}
+            >
+              <div style={{ border: "1px solid black", width: "100%" }}>
+                {ele.title}
+              </div>
+              <button
+                onClick={() => {
+                  handleChange(ind);
+
+                }}
+                
+              >
+                ➕
+              </button>
+            </div>
+          );
+        })}
+      </div>
+      <div className="second">
+        {newData.map((ele, ind) => {
+          return (
+            <div
+              key={ind}
+              style={{
+                display: "flex",
+                gap: "5px",
+                width: "100%",
+                alignItems: "flex-start"
+              }}
+            >
+              <div
+                style={{
+                  border: "1px solid black",
+                  width: "100%"
+                }}
+              >
+                {ele.title}
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
-
-export default App;
